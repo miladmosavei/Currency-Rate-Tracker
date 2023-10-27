@@ -1,12 +1,21 @@
 package com.example.currentrack.di
 
-import com.example.currentrack.model.CurrencyRateMapper
-import com.example.currentrack.model.CurrencyRateService
-import com.example.currentrack.model.JsonValidator
+import com.example.currentrack.data.interceptor.ResponseValidationInterceptor
+import com.example.currentrack.data.mappers.CurrencyRateMapper
+import com.example.currentrack.data.mappers.failedmap.FailedMapperDelegate
+import com.example.currentrack.data.mappers.failedmap.FailedMapperDelegateImpl
+import com.example.currentrack.data.repositories.CurrencyRateRepository
+import com.example.currentrack.data.repositories.safecall.SafeCallDelegate
+import com.example.currentrack.data.repositories.safecall.SafeCallDelegateImpl
+import com.example.currentrack.data.services.CurrencyRateService
+import com.example.currentrack.data.validators.IJsonValidator
+import com.example.currentrack.data.validators.JsonValidator
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,8 +28,15 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideOkHttp(): OkHttpClient {
+    fun provideInterceptor(jsonValidator: IJsonValidator): Interceptor {
+        return ResponseValidationInterceptor(jsonValidator)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttp(interceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .callTimeout(8000, TimeUnit.MILLISECONDS)
             .build()
     }
@@ -47,7 +63,16 @@ object DataModule {
     }
 
     @Provides
-    fun provideMapper(): CurrencyRateMapper{
-        return CurrencyRateMapper()
+    fun provideMapper(failedMapperDelegate: FailedMapperDelegateImpl): CurrencyRateMapper {
+        return CurrencyRateMapper(failedMapperDelegate)
+    }
+
+    @Provides
+    fun provideCurrencyRateRepository(
+        service: CurrencyRateService,
+        mapper: CurrencyRateMapper,
+        safeCallDelegateImpl: SafeCallDelegateImpl
+        ): CurrencyRateRepository {
+        return CurrencyRateRepository(service,mapper,safeCallDelegateImpl)
     }
 }

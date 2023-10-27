@@ -1,4 +1,4 @@
-package com.example.currentrack.model
+package com.example.currentrack.data
 
 import java.io.BufferedReader
 import java.io.InputStreamReader

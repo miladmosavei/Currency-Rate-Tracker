@@ -1,5 +1,5 @@
 import androidx.lifecycle.ViewModel
-import com.example.currentrack.model.CurrencyRateModel
+import com.example.currentrack.data.CurrencyRateModel
 import com.example.currentrack.viewmodel.timer.CurrencyRateTimer
 import com.example.currentrack.viewmodel.timer.TimerCallback
 import dagger.hilt.android.scopes.ViewModelScoped

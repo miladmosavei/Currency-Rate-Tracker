@@ -1,6 +1,6 @@
 package com.example.currentrack.di
 
-import com.example.currentrack.model.CurrencyRateModel
+import com.example.currentrack.data.CurrencyRateModel
 import com.example.currentrack.viewmodel.timer.CurrencyRateTimer
 import dagger.Module
 import dagger.Provides

@@ -1,9 +1,9 @@
-package com.example.currentrack.model
+package com.example.currentrack.data.validators
 
 import org.json.JSONObject
 
-class JsonValidator {
-    fun validate(jsonString: String): Boolean {
+class JsonValidator:IJsonValidator {
+    override fun isValid(jsonString: String): Boolean {
         try {
             val jsonData = JSONObject(jsonString)
 
