@@ -1,36 +1,38 @@
 import androidx.lifecycle.ViewModel
-import com.example.currentrack.data.CurrencyRateModel
+import androidx.lifecycle.viewModelScope
+import com.example.currentrack.domain.usecases.CurrencyRateUseCase
 import com.example.currentrack.viewmodel.timer.CurrencyRateTimer
 import com.example.currentrack.viewmodel.timer.TimerCallback
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ViewModelScoped
+//@HiltViewModel
 class CurrencyRateViewModel
 @Inject constructor(
-    private val timer: CurrencyRateTimer,
-    private val model: CurrencyRateModel
+//    private val timer: CurrencyRateTimer,
+//    private val currencyRateUseCase: CurrencyRateUseCase
 ) : ViewModel() {
 
     init {
-        // Initialize the timer with your desired interval
-        timer.setTimerCallback(object : TimerCallback {
-            override fun onTimerTick() {
-                fetchData()
-            }
-        })
-        timer.start()
+//        timer.setTimerCallback(object : TimerCallback {
+//            override fun onTimerTick() {
+//                viewModelScope.launch(Dispatchers.IO) {
+//                    fetchData()
+//                }
+//            }
+//        })
+//        timer.start()
     }
 
-    // Fetch data from the Model layer
-    fun fetchData() {
-        // Implement data fetching and processing logic here using the Model
-        model.fetchDataFromServer()
+    suspend fun fetchData() {
+//        val currencyRate = currencyRateUseCase.getCurrencyRate()
+//        currencyRate
     }
 
     override fun onCleared() {
         super.onCleared()
-        // Stop the timer when the ViewModel is no longer in use
-        timer.stop()
+//        timer.stop()
     }
 }

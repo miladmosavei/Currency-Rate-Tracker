@@ -2,15 +2,9 @@ package com.example.currentrack.di
 
 import com.example.currentrack.data.interceptor.ResponseValidationInterceptor
 import com.example.currentrack.data.mappers.CurrencyRateMapper
-import com.example.currentrack.data.mappers.failedmap.FailedMapperDelegate
 import com.example.currentrack.data.mappers.failedmap.FailedMapperDelegateImpl
-import com.example.currentrack.data.repositories.CurrencyRateRepository
-import com.example.currentrack.data.repositories.safecall.SafeCallDelegate
-import com.example.currentrack.data.repositories.safecall.SafeCallDelegateImpl
 import com.example.currentrack.data.services.CurrencyRateService
-import com.example.currentrack.data.validators.IJsonValidator
 import com.example.currentrack.data.validators.JsonValidator
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,8 +21,12 @@ import javax.inject.Singleton
 object DataModule {
 
     @Provides
+    fun provideJsonValidator(): JsonValidator {
+        return JsonValidator()
+    }
+    @Provides
     @Singleton
-    fun provideInterceptor(jsonValidator: IJsonValidator): Interceptor {
+    fun provideInterceptor(jsonValidator: JsonValidator): Interceptor {
         return ResponseValidationInterceptor(jsonValidator)
     }
 
@@ -37,7 +35,7 @@ object DataModule {
     fun provideOkHttp(interceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
-            .callTimeout(8000, TimeUnit.MILLISECONDS)
+            .callTimeout(10000, TimeUnit.MILLISECONDS)
             .build()
     }
 
@@ -57,22 +55,10 @@ object DataModule {
         return retrofit.create(CurrencyRateService::class.java)
     }
 
-    @Provides
-    fun provideJsonValidator(): JsonValidator {
-        return JsonValidator()
-    }
+
 
     @Provides
     fun provideMapper(failedMapperDelegate: FailedMapperDelegateImpl): CurrencyRateMapper {
         return CurrencyRateMapper(failedMapperDelegate)
-    }
-
-    @Provides
-    fun provideCurrencyRateRepository(
-        service: CurrencyRateService,
-        mapper: CurrencyRateMapper,
-        safeCallDelegateImpl: SafeCallDelegateImpl
-        ): CurrencyRateRepository {
-        return CurrencyRateRepository(service,mapper,safeCallDelegateImpl)
     }
 }

@@ -12,7 +12,10 @@ interface ResponseMapper<DTO, T> {
     fun map(input: Response<DTO>?): Result<T> {
         return input?.body()?.let { createModelFromDTO(input) }
             ?.let { Result.success(it) }
-            ?: failedMapperDelegate.mapFailure(CustomException(Error.NullObject))
+            ?: if (input?.code() == 400) {
+                failedMapperDelegate.mapFailure(CustomException(Error.VALIDATION_ERROR))
+            }else
+                failedMapperDelegate.mapFailure(CustomException(Error.NullObject))
     }
 
     fun createModelFromDTO(input: Response<DTO>): T

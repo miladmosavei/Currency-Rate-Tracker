@@ -7,6 +7,4 @@ package com.example.currentrack.data.enum
 enum class Error {
     NullObject,
     VALIDATION_ERROR,
-    UNSUCCESSFUL_FETCH,
-    FAILED_PARS
 }

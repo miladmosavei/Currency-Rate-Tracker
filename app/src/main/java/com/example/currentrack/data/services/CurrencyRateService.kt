@@ -6,6 +6,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface CurrencyRateService {
-    @GET("code-challenge/index.php")
+    @GET("code-challenge")
     suspend fun getCurrencyRates(): Response<CurrencyRateResponseDTO>
 }
