@@ -7,27 +7,20 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import okio.Buffer
 import javax.inject.Inject
-import okio.BufferedSource
-import okio.Okio
-import okio.ByteString
 
 class ResponseValidationInterceptor @Inject constructor(private val validator: IJsonValidator) :
     Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
-
         val json = response.peekBody(Long.MAX_VALUE).string()
         if (!validator.isValid(json)) {
-            // Create an error response
-            val errorResponse = Response.Builder()
+            return Response.Builder()
                 .request(chain.request())
                 .protocol(response.protocol())
-                .code(400) // Use an appropriate HTTP error code
+                .code(400)
                 .message("JSON validation failed")
                 .body(createResponseBody("JSON validation failed"))
                 .build()
-
-            return errorResponse
         }
         return response
     }

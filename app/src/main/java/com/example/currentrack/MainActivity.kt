@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewModelScope
 import com.example.currentrack.ui.theme.CurrenTrackTheme
-import com.example.currentrack.viewmodel.AViewMOdel
+import com.example.currentrack.viewmodel.CurrencyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val currencyRateViewModel : AViewMOdel by viewModels()
+    val currencyRateViewModel : CurrencyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
