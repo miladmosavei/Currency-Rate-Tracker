@@ -21,10 +21,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val currencyRateViewModel: CurrencyViewModel by viewModels()
+    private val currencyRateViewModel: CurrencyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycle.addObserver(currencyRateViewModel)
         setContent {
             CurrenTrackTheme {
                 val currencyRates = currencyRateViewModel.currencyRateLiveData.observeAsState()

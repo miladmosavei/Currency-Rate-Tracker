@@ -1,49 +1,59 @@
 package com.example.currentrack.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.currentrack.domain.entities.CurrencyRateData
 import com.example.currentrack.domain.usecases.CurrencyRateUseCase
-import com.example.currentrack.viewmodel.timer.CurrencyRateTimer
-import com.example.currentrack.viewmodel.timer.TimerCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
-    private val timer: CurrencyRateTimer,
     private val currencyRateUseCase: CurrencyRateUseCase
-): ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
     private val _currencyRateLiveData = MutableLiveData<CurrencyRateData>()
     val currencyRateLiveData: LiveData<CurrencyRateData> = _currencyRateLiveData
-    init {
-        timer.setTimerCallback(object : TimerCallback {
-            override fun onTimerTick() {
-                viewModelScope.launch {
-                    fetchData()
-                }
-            }
-        })
-        timer.start()
+    private val refreshIntervalMillis = 2 * 60 * 1000L
+
+    private var job: Job? = null
+
+    override fun onCreate(owner: LifecycleOwner) {
+        startPeriodicTask()
     }
 
-    suspend fun fetchData() {
-        val currencyRate = currencyRateUseCase.getCurrencyRate()
-        currencyRate.collect{
-            it.onSuccess {
-                _currencyRateLiveData.value = it
-            }
-            it.onFailure {
-                it
+    override fun onDestroy(owner: LifecycleOwner) {
+        job?.cancel()
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        job?.cancel()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        if (job?.isCancelled == true)
+            startPeriodicTask()
+    }
+
+    private fun startPeriodicTask() {
+        job = viewModelScope.launch(Dispatchers.IO) {
+            while (isActive) {
+                fetchData()
+                delay(refreshIntervalMillis)
             }
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        timer.stop()
+    private suspend fun fetchData() {
+        val currencyRate = currencyRateUseCase.getCurrencyRate()
+        currencyRate.collect {
+            it.onSuccess {
+                _currencyRateLiveData.postValue(it)
+            }
+            it.onFailure {
+                // Handle the error as needed
+            }
+        }
     }
 }
