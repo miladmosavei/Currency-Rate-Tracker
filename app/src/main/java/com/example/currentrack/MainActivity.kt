@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewModelScope
 import com.example.currentrack.domain.entities.CurrencyRateData
+import com.example.currentrack.ui.home.CurrencyScreen
 import com.example.currentrack.ui.theme.CurrenTrackTheme
 import com.example.currentrack.viewmodel.CurrencyViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
             CurrenTrackTheme {
                 val currencyRates = currencyRateViewModel.currencyRateLiveData.observeAsState()
                 if (currencyRates.value != null) {
-                    CurrencyRateList(currencyRates.value!!)
+                    CurrencyScreen(currencyRates.value!!)
                 }
 
             }

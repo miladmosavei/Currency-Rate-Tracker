@@ -15,7 +15,10 @@ class CurrencyRateMapper @Inject constructor(
     override fun createModelFromDTO(input: Response<CurrencyRateResponseDTO>): CurrencyRateData {
         val dto = input.body()!!
         val rates = dto.rates.map { rateDTO ->
-            CurrencyRate(rateDTO.symbol, rateDTO.price)
+            CurrencyRate(
+                rateDTO.symbol,
+                String.format("%.4f", rateDTO.price)
+            )
         }
         return CurrencyRateData(rates)
     }
