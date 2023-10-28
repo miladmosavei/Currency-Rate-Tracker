@@ -46,6 +46,20 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    hilt {
+        enableTransformForLocalTests = true
+    }
+    kapt {
+        correctErrorTypes true
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.21'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.21'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.21'
+    }
 }
 
 dependencies {
@@ -71,4 +85,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     // GSON
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+
+//    //add observer as state
+    implementation "androidx.compose.runtime:runtime-livedata:1.5.4"
 }
