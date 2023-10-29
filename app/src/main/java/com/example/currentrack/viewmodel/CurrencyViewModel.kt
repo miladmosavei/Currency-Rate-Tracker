@@ -5,16 +5,19 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.currentrack.domain.entities.CurrencyRateData
 import com.example.currentrack.domain.usecases.CurrencyRateUseCase
+import com.example.currentrack.viewmodel.error.ShowErrorDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
-    private val currencyRateUseCase: CurrencyRateUseCase
-) : ViewModel(), DefaultLifecycleObserver {
+    private val currencyRateUseCase: CurrencyRateUseCase,
+    private val showErrorDelegate: ShowErrorDelegate
+) : ViewModel(), DefaultLifecycleObserver, ShowErrorDelegate by showErrorDelegate {
     private val _currencyRateLiveData = MutableLiveData<CurrencyRateData>()
     val currencyRateLiveData: LiveData<CurrencyRateData> = _currencyRateLiveData
     private var previousCurrencyRateDate: CurrencyRateData? = null
@@ -44,7 +47,6 @@ class CurrencyViewModel @Inject constructor(
             startPeriodicTask()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun startPeriodicTask() {
         job = viewModelScope.launch(Dispatchers.IO) {
             while (isActive) {
@@ -55,7 +57,6 @@ class CurrencyViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun fetchData() {
         val currencyRate = currencyRateUseCase.getCurrencyRate()
         currencyRate.collect {
@@ -66,8 +67,7 @@ class CurrencyViewModel @Inject constructor(
                 _currencyRateLiveData.postValue(newCurrencyRateData)
                 _updatedDate.postValue(getCurrentTimeFormatted())
             }.onFailure {
-                // Handle the error as needed
-                it
+                onFailure(it)
             }
         }
     }
@@ -92,8 +92,7 @@ class CurrencyViewModel @Inject constructor(
         return CurrencyRateData(updatedRates)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getCurrentTimeFormatted(): String {
+    private fun getCurrentTimeFormatted(): String {
         val current = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm")
         return current.format(formatter)

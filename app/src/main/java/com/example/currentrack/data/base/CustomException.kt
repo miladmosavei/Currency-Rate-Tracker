@@ -10,4 +10,5 @@ import com.example.currentrack.data.enum.Error
  */
 data class CustomException(
     val error: Error,
-    ):Exception()
+    val errorMessage:String
+    ):Exception(errorMessage)

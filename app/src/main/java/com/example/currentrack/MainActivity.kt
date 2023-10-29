@@ -1,9 +1,11 @@
 package com.example.currentrack
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewModelScope
 import com.example.currentrack.domain.entities.CurrencyRateData
+import com.example.currentrack.ui.error.Dialog
 import com.example.currentrack.ui.home.CurrencyScreen
 import com.example.currentrack.ui.loading.ArcRotationAnimation
 import com.example.currentrack.ui.loading.Loading
@@ -26,6 +29,7 @@ import com.example.currentrack.ui.theme.CurrenTrackTheme
 import com.example.currentrack.viewmodel.CurrencyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+@RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val currencyRateViewModel: CurrencyViewModel by viewModels()
@@ -45,7 +49,10 @@ class MainActivity : ComponentActivity() {
                 if (currencyRates.value != null && lastUpdatedTime.value != null) {
                     CurrencyScreen(currencyRates.value!!, lastUpdatedTime.value!!)
                 }
-
+                val errorState = currencyRateViewModel.getErrorDialogState().observeAsState()
+                if (errorState.value == true) {
+                    Dialog(currencyRateViewModel, currencyRateViewModel.getErrorMessage())
+                }
             }
         }
     }

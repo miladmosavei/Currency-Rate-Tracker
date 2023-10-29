@@ -5,6 +5,8 @@ import com.example.currentrack.data.repositories.CurrencyRateRepository
 import com.example.currentrack.data.repositories.safecall.SafeCallDelegateImpl
 import com.example.currentrack.data.services.CurrencyRateService
 import com.example.currentrack.domain.usecases.CurrencyRateUseCase
+import com.example.currentrack.viewmodel.error.ShowDialogDelegateImpl
+import com.example.currentrack.viewmodel.error.ShowErrorDelegate
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,5 +29,10 @@ object CurrencyRateViewModelModule {
         safeCallDelegateImpl: SafeCallDelegateImpl
     ): CurrencyRateRepository {
         return CurrencyRateRepository(service,mapper,safeCallDelegateImpl)
+    }
+
+    @Provides
+    fun provideShowErrorDelegate(): ShowErrorDelegate {
+        return ShowDialogDelegateImpl()
     }
 }
