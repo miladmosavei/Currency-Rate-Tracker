@@ -21,7 +21,8 @@ class CurrencyViewModel @Inject constructor(
     private val refreshIntervalMillis = 2 * 1 * 1000L
     private val _updatedDate = MutableLiveData<String>()
     val updatedDate:LiveData<String> = _updatedDate
-
+    private val _loadingData: MutableLiveData<Boolean> = MutableLiveData(false)
+    val loadingData: LiveData<Boolean> = _loadingData
     private var job: Job? = null
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -43,9 +44,11 @@ class CurrencyViewModel @Inject constructor(
             startPeriodicTask()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun startPeriodicTask() {
         job = viewModelScope.launch(Dispatchers.IO) {
             while (isActive) {
+                _loadingData.postValue(true)
                 fetchData()
                 delay(refreshIntervalMillis)
             }
@@ -56,6 +59,7 @@ class CurrencyViewModel @Inject constructor(
     private suspend fun fetchData() {
         val currencyRate = currencyRateUseCase.getCurrencyRate()
         currencyRate.collect {
+            _loadingData.postValue(false)
             it.onSuccess { currencyRateData ->
                 val newCurrencyRateData = compareAndUpdateRates(previousCurrencyRateDate ?: currencyRateData, currencyRateData)
                 previousCurrencyRateDate = newCurrencyRateData
@@ -63,6 +67,7 @@ class CurrencyViewModel @Inject constructor(
                 _updatedDate.postValue(getCurrentTimeFormatted())
             }.onFailure {
                 // Handle the error as needed
+                it
             }
         }
     }
