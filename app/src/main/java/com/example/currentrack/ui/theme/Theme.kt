@@ -9,14 +9,12 @@ import androidx.compose.ui.graphics.Color
 
 val colors = lightColors(
     primary = Color(0xff6200ee),
-    secondary = Color(0xff03dac6),
-    background = Color(0xfff9f9f9)
+    secondary = Color(0xffcccccc),
+    background = Color(0xfff9f9f9),
 )
 
 @Composable
 fun CurrenTrackTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = colors
-
     MaterialTheme(
         colors = colors,
         typography = Typography,

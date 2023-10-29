@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CurrenTrack</string>
+    <string name="last_update">"Last updated: "</string>
 </resources>

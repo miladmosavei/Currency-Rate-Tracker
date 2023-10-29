@@ -30,8 +30,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             CurrenTrackTheme {
                 val currencyRates = currencyRateViewModel.currencyRateLiveData.observeAsState()
-                if (currencyRates.value != null) {
-                    CurrencyScreen(currencyRates.value!!)
+                val lastUpdatedTime = currencyRateViewModel.updatedDate.observeAsState()
+                if (currencyRates.value != null && lastUpdatedTime.value != null) {
+                    CurrencyScreen(currencyRates.value!!, lastUpdatedTime.value!!)
                 }
 
             }

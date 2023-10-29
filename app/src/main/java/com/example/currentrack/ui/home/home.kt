@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,24 +31,24 @@ import com.example.currentrack.ui.theme.Shapes
 fun previewCurrencyScreen() {
     CurrenTrackTheme {
         val currencyExampleList = arrayListOf<CurrencyRate>()
-        for (i in 0 until 10) {
+        for (i in 0 until 5) {
             currencyExampleList.add(CurrencyRate("EURUSD", "100.0"))
         }
         val currencyRateData = CurrencyRateData(currencyExampleList)
-        CurrencyScreen(currencyRateData)
+        CurrencyScreen(currencyRateData, "30/03/2023 - 16:00")
     }
 }
 
 @Composable
-fun CurrencyScreen(currencyRateData: CurrencyRateData) {
+fun CurrencyScreen(currencyRateData: CurrencyRateData, lastUpdate: String) {
     CurrenTrackTheme {
-        Main(currencyRateData)
+        Main(currencyRateData, lastUpdate)
     }
 }
 
 
 @Composable
-private fun Main(currencyRateData: CurrencyRateData) {
+private fun Main(currencyRateData: CurrencyRateData, lastUpdate: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +62,7 @@ private fun Main(currencyRateData: CurrencyRateData) {
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.h1,
         )
-        RateList(currencyRateData = currencyRateData)
+        RateList(currencyRateData = currencyRateData, lastUpdate)
 
     }
 }
@@ -73,11 +75,11 @@ fun previewRateList() {
         currencyExampleList.add(CurrencyRate("EURUSD", "100.0"))
     }
     val currencyRateData = CurrencyRateData(currencyExampleList)
-    RateList(currencyRateData = currencyRateData)
+    RateList(currencyRateData = currencyRateData, "30/03/2023 - 16:00")
 }
 
 @Composable
-fun RateList(currencyRateData: CurrencyRateData) {
+fun RateList(currencyRateData: CurrencyRateData, lastUpdate: String) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -89,7 +91,10 @@ fun RateList(currencyRateData: CurrencyRateData) {
 
         ) {
             items(currencyRateData.rates.size) { index ->
-                RateItem(currencyRateData.rates[index], true)
+                RateItem(currencyRateData.rates[index])
+            }
+            item {
+                LastUpdateDate(lastUpdate)
             }
         }
     }
@@ -99,15 +104,16 @@ fun RateList(currencyRateData: CurrencyRateData) {
 @Composable
 fun preViewRateItem() {
     CurrenTrackTheme {
-        RateItem(currencyRate = CurrencyRate("EURUSD", "100.0"), true)
+        RateItem(currencyRate = CurrencyRate("EURUSD", "100.0"))
     }
 }
 
 @Composable
-fun RateItem(currencyRate: CurrencyRate, isUp: Boolean) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
+fun RateItem(currencyRate: CurrencyRate) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
         elevation = 0.dp, shape = Shapes.medium,
         backgroundColor = MaterialTheme.colors.background,
     ) {
@@ -136,16 +142,43 @@ fun RateItem(currencyRate: CurrencyRate, isUp: Boolean) {
                 style = MaterialTheme.typography.h5
             )
             Text(
-                text = currencyRate.price.toString(),
-                color = if (isUp) MaterialTheme.colors.secondary else MaterialTheme.colors.error,
+                text = currencyRate.price,
+                color = if (currencyRate.priceIncreased) colorResource(id = R.color.increased_price) else colorResource(
+                    id = R.color.decreased_price
+                ),
                 style = MaterialTheme.typography.caption
             )
             Icon(
-                imageVector = if (isUp) Icons.Filled.ThumbUp else Icons.Filled.ArrowDropDown,
-                contentDescription = if (isUp) "Up arrow" else "Down arrow",
-                tint = if (isUp) MaterialTheme.colors.secondary else MaterialTheme.colors.error,
+                painter = painterResource(id = if (currencyRate.priceIncreased) R.drawable.arrow_up else R.drawable.arrow_down),
+                contentDescription = if (currencyRate.priceIncreased) "Up arrow" else "Down arrow",
+                tint = if (currencyRate.priceIncreased) colorResource(id = R.color.increased_price) else colorResource(
+                    id = R.color.decreased_price
+                ),
                 modifier = Modifier.size(dimensionResource(id = R.dimen.icon_size))
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun previewLastUpdateDate() {
+    CurrenTrackTheme {
+        LastUpdateDate(lastUpdate = "Last updated: 30/03/2023 - 16:00")
+    }
+}
+
+@Composable
+fun LastUpdateDate(lastUpdate: String) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 70.dp, bottom = 44.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Row {
+            Text(text = stringResource(id = R.string.last_update), style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.secondary)
+            Text(text = lastUpdate, style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.secondary)
         }
     }
 }
