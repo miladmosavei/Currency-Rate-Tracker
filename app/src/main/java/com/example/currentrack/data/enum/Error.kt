@@ -7,4 +7,5 @@ package com.example.currentrack.data.enum
 enum class Error {
     NullObject,
     VALIDATION_ERROR,
+    NETWORK_ERROR
 }

@@ -1,13 +1,18 @@
 package com.example.currentrack.di
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.example.currentrack.data.interceptor.ResponseValidationInterceptor
 import com.example.currentrack.data.mappers.CurrencyRateMapper
 import com.example.currentrack.data.mappers.failedmap.FailedMapperDelegateImpl
+import com.example.currentrack.data.repositories.connectivity.ConnectivityDelegate
+import com.example.currentrack.data.repositories.connectivity.ConnectivityDelegateImpl
 import com.example.currentrack.data.services.CurrencyRateService
 import com.example.currentrack.data.validators.JsonValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -61,4 +66,15 @@ object DataModule {
     fun provideMapper(failedMapperDelegate: FailedMapperDelegateImpl): CurrencyRateMapper {
         return CurrencyRateMapper(failedMapperDelegate)
     }
+
+    @Provides
+    fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Provides
+    fun provideConnectivityDelegate(connectivityManager: ConnectivityManager): ConnectivityDelegate {
+        return ConnectivityDelegateImpl(connectivityManager)
+    }
+
 }

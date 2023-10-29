@@ -13,14 +13,18 @@ class CurrencyRateMapper @Inject constructor(
 ) : ResponseMapper<CurrencyRateResponseDTO, CurrencyRateData> {
 
     override fun createModelFromDTO(input: Response<CurrencyRateResponseDTO>): CurrencyRateData {
-        val dto = input.body()!!
-        val rates = dto.rates.map { rateDTO ->
-            CurrencyRate(
-                rateDTO.symbol,
-                String.format("%.4f", rateDTO.price)
-            )
+        val dto = input.body()
+        return if (dto != null) {
+            val rates = dto.rates.map { rateDTO ->
+                CurrencyRate(
+                    rateDTO.symbol,
+                    String.format("%.4f", rateDTO.price)
+                )
+            }
+            CurrencyRateData(rates)
+        } else {
+            CurrencyRateData(emptyList())
         }
-        return CurrencyRateData(rates)
     }
 
 }

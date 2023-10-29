@@ -18,6 +18,9 @@ class CurrencyRateRepository @Inject constructor(
     private val safeCallDelegate: SafeCallDelegateImpl
 ): IRepository.CurrencyRateRepository(), SafeCallDelegate by safeCallDelegate {
 
+   /**
+    * The function fetches currency rates using a service and maps the result using a mapper.
+    */
    override suspend fun fetchCurrencyRates(): Result<CurrencyRateData> = safeCall {
        val rates = service.getCurrencyRates()
        mapper.map(rates)

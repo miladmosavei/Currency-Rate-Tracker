@@ -1,6 +1,8 @@
 package com.example.currentrack.di
 
+import com.example.currentrack.data.mappers.failedmap.FailedMapperDelegate
 import com.example.currentrack.data.mappers.failedmap.FailedMapperDelegateImpl
+import com.example.currentrack.data.repositories.connectivity.ConnectivityDelegate
 import com.example.currentrack.data.repositories.safecall.SafeCallDelegateImpl
 import dagger.Module
 import dagger.Provides
@@ -16,7 +18,8 @@ object Delegate {
     }
 
     @Provides
-    fun provideSafeCallDelegate(failedMapperDelegate: FailedMapperDelegateImpl): SafeCallDelegateImpl {
-        return SafeCallDelegateImpl(failedMapperDelegate)
+    fun provideSafeCallDelegate(failedMapperDelegate: FailedMapperDelegateImpl,
+                                connectivityDelegateImpl: ConnectivityDelegate): SafeCallDelegateImpl {
+        return SafeCallDelegateImpl(failedMapperDelegate, connectivityDelegateImpl)
     }
 }

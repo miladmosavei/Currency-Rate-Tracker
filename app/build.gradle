@@ -94,4 +94,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version"
     // for inject viewModel in composable functions
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_viewmode_version"
+
+    //mockk
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    //lot better testing assertion than default junit assertion
+    testImplementation "com.google.truth:truth:$google_truth_version"
+
 }

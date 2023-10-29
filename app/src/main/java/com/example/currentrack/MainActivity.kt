@@ -39,43 +39,21 @@ class MainActivity : ComponentActivity() {
         lifecycle.addObserver(currencyRateViewModel)
         setContent {
             CurrenTrackTheme {
-
                 val currencyRates = currencyRateViewModel.currencyRateLiveData.observeAsState()
                 val lastUpdatedTime = currencyRateViewModel.updatedDate.observeAsState()
                 val loadingData = currencyRateViewModel.loadingData.observeAsState()
+                val errorState = currencyRateViewModel.getErrorDialogState().observeAsState()
+
                 if (loadingData.value == true) {
                    Loading()
                 }
                 if (currencyRates.value != null && lastUpdatedTime.value != null) {
                     CurrencyScreen(currencyRates.value!!, lastUpdatedTime.value!!)
                 }
-                val errorState = currencyRateViewModel.getErrorDialogState().observeAsState()
                 if (errorState.value == true) {
                     Dialog(currencyRateViewModel, currencyRateViewModel.getErrorMessage())
                 }
             }
         }
-    }
-}
-
-@Composable
-fun CurrencyRateList(currencyRateData: CurrencyRateData) {
-    LazyColumn {
-        items(currencyRateData.rates.size) { currencyRate ->
-            Text(text = "${currencyRateData.rates[currencyRate].symbol}: ${currencyRateData.rates[currencyRate].price}")
-        }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    CurrenTrackTheme {
-        Greeting("Android")
     }
 }
