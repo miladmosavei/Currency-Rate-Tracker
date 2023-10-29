@@ -75,6 +75,7 @@ class CurrencyViewModel @Inject constructor(
         currencyRate.collect {
             _loadingData.postValue(false)
             it.onSuccess { currencyRateData ->
+                hideErrorDialog()
                 val newCurrencyRateData = compareAndUpdateRates(
                     previousCurrencyRateDate ?: currencyRateData,
                     currencyRateData
@@ -82,8 +83,8 @@ class CurrencyViewModel @Inject constructor(
                 previousCurrencyRateDate = newCurrencyRateData
                 _currencyRateLiveData.postValue(newCurrencyRateData)
                 _updatedDate.postValue(getCurrentTimeFormatted())
-            }.onFailure {
-                onFailure(it)
+            }.onFailure { throwable ->
+                onFailure(throwable)
             }
         }
     }

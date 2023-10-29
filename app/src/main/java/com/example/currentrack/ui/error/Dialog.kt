@@ -30,7 +30,7 @@ fun Dialog(mainViewModel: ShowErrorDelegate, message: String) {
     if (openDialog.value == true) {
         AlertDialog(
             onDismissRequest = {
-                mainViewModel.hideDialog()
+                mainViewModel.hideErrorDialog()
             },
             title = {
                 Text(
@@ -47,7 +47,7 @@ fun Dialog(mainViewModel: ShowErrorDelegate, message: String) {
                 ) {
                     Button(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = { false.also { mainViewModel.hideDialog() } }
+                        onClick = { false.also { mainViewModel.hideErrorDialog() } }
                     ) {
                         Text(stringResource(R.string.dismiss))
                     }

@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 val errorState = currencyRateViewModel.getErrorDialogState().observeAsState()
 
                 if (loadingData.value == true) {
-                   Loading()
+                    Loading()
                 }
                 if (currencyRates.value != null && lastUpdatedTime.value != null) {
                     CurrencyScreen(currencyRates.value!!, lastUpdatedTime.value!!)

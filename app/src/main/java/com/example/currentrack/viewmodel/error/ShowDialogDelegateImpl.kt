@@ -17,15 +17,15 @@ class ShowDialogDelegateImpl : ShowErrorDelegate {
     private val _errorLiveData = MutableLiveData<Throwable>()
     override fun onFailure(throwable: Throwable) {
         setErrorState(true)
-        showDialog()
+        showErrorDialog()
         _errorLiveData.postValue(throwable)
     }
 
-    override fun showDialog() {
+    override fun showErrorDialog() {
         _showErrorDialogLiveData.postValue(true)
     }
 
-    override fun hideDialog() {
+    override fun hideErrorDialog() {
         _showErrorDialogLiveData.postValue(false)
     }
 
