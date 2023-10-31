@@ -1,11 +1,11 @@
-package com.example.currentrack.viewmodel
+package com.example.currentrack.presentation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.currentrack.domain.entities.CurrencyRateData
 import com.example.currentrack.domain.usecases.CurrencyRateUseCase
-import com.example.currentrack.viewmodel.error.ShowErrorDelegate
+import com.example.currentrack.presentation.error.ShowErrorDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.time.LocalDateTime
@@ -21,7 +21,7 @@ class CurrencyViewModel @Inject constructor(
     private val _currencyRateLiveData = MutableLiveData<CurrencyRateData>()
     val currencyRateLiveData: LiveData<CurrencyRateData> = _currencyRateLiveData
     private var previousCurrencyRateDate: CurrencyRateData? = null
-    private val refreshIntervalMillis = 2 * 1 * 1000L
+    private val refreshIntervalMillis = 2 * 60 * 1000L
     private val _updatedDate = MutableLiveData<String>()
     val updatedDate: LiveData<String> = _updatedDate
     private val _loadingData: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -77,7 +77,7 @@ class CurrencyViewModel @Inject constructor(
             it.onSuccess { currencyRateData ->
                 hideErrorDialog()
                 val newCurrencyRateData = compareAndUpdateRates(
-                    previousCurrencyRateDate ?: currencyRateData,
+                    previousCurrencyRateDate,
                     currencyRateData
                 )
                 previousCurrencyRateDate = newCurrencyRateData
@@ -101,26 +101,28 @@ class CurrencyViewModel @Inject constructor(
      * @return a new instance of `CurrencyRateData` with the updated rates.
      */
     internal fun compareAndUpdateRates(
-        previousData: CurrencyRateData,
+        previousData: CurrencyRateData?,
         newData: CurrencyRateData
     ): CurrencyRateData {
-        val previousRatesMap = previousData.rates.associateBy { it.symbol }
-        val updatedRates = newData.rates.toMutableList()
+        previousData?.let {
 
-        for (newRate in updatedRates) {
-            val previousRate = previousRatesMap[newRate.symbol]
+            val previousRatesMap = previousData.rates.associateBy { it.symbol }
+            val updatedRates = newData.rates.toMutableList()
 
-            if (previousRate != null) {
-                val newPrice = newRate.price.toDoubleOrNull()
-                val previousPrice = previousRate.price.toDoubleOrNull()
+            for (newRate in updatedRates) {
+                val previousRate = previousRatesMap[newRate.symbol]
 
-                if (newPrice != null && previousPrice != null) {
-                    newRate.priceIncreased = newPrice > previousPrice
+                if (previousRate != null) {
+                    val newPrice = newRate.price.toDoubleOrNull()
+                    val previousPrice = previousRate.price.toDoubleOrNull()
+
+                    if (newPrice != null && previousPrice != null) {
+                        newRate.priceIncreased = newPrice > previousPrice
+                    }
                 }
             }
-        }
-
-        return CurrencyRateData(updatedRates)
+            return CurrencyRateData(updatedRates)
+        } ?: return newData
     }
 
     /**

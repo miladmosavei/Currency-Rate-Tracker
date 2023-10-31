@@ -1,8 +1,8 @@
 import com.example.currentrack.domain.entities.CurrencyRate
 import com.example.currentrack.domain.entities.CurrencyRateData
 import com.example.currentrack.domain.usecases.CurrencyRateUseCase
-import com.example.currentrack.viewmodel.CurrencyViewModel
-import com.example.currentrack.viewmodel.error.ShowErrorDelegate
+import com.example.currentrack.presentation.CurrencyViewModel
+import com.example.currentrack.presentation.error.ShowErrorDelegate
 import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
 import io.mockk.spyk

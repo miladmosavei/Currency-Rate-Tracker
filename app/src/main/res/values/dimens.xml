@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_medium">24dp</dimen>
+    <dimen name="items_margin">16dp</dimen>
     <dimen name="image_size">32dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="icon_size">24dp</dimen>
+    <dimen name="padding_tiny">5dp</dimen>
+    <dimen name="start_padding">24dp</dimen>
+    <dimen name="top_padding">76dp</dimen>
+    <dimen name="elevation">0dp</dimen>
+    <dimen name="last_update_top_padding">70dp</dimen>
+    <dimen name="last_update_buttom_padding">44dp</dimen>
+    <dimen name="paddingTop">8dp</dimen>
 
 </resources>

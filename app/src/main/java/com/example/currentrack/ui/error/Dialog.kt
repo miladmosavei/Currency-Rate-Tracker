@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.currentrack.R
-import com.example.currentrack.viewmodel.error.ShowErrorDelegate
+import com.example.currentrack.presentation.error.ShowErrorDelegate
 
 /**
  * Dialog

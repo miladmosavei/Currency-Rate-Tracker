@@ -1,4 +1,4 @@
-package com.example.currentrack.viewmodel.error
+package com.example.currentrack.presentation.error
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

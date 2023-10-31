@@ -2,4 +2,17 @@
     <string name="app_name">CurrenTrack</string>
     <string name="last_update">"Last updated: "</string>
     <string name="dismiss">dismiss</string>
+    <string name="eur_usd">EURUSD</string>
+    <string name="gbp_jpy">GBPJPY</string>
+    <string name="aud_cad">AUDCAD</string>
+    <string name="jpy_aed">JPYAED</string>
+    <string name="jpy_sek">JPYSEK</string>
+    <string name="usd_gbp">USDGBP</string>
+    <string name="sample_updated_list">Last updated: 30/03/2023 - 16:00</string>
+    <string name="sample_date">30/03/2023 - 16:00</string>
+    <string name="sample_currency">EURUSD</string>
+    <string name="sample_price">100.0</string>
+    <string name="rates">Rates</string>
+    <string name="arrow_up_description">Up arrow</string>
+    <string name="arrow_down_description">Down arrow</string>
 </resources>

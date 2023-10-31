@@ -6,27 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewModelScope
-import com.example.currentrack.domain.entities.CurrencyRateData
 import com.example.currentrack.ui.error.Dialog
 import com.example.currentrack.ui.home.CurrencyScreen
-import com.example.currentrack.ui.loading.ArcRotationAnimation
 import com.example.currentrack.ui.loading.Loading
 import com.example.currentrack.ui.theme.CurrenTrackTheme
-import com.example.currentrack.viewmodel.CurrencyViewModel
+import com.example.currentrack.presentation.CurrencyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @RequiresApi(Build.VERSION_CODES.O)
