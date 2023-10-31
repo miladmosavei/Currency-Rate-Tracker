@@ -42,7 +42,7 @@ If you'd like to contribute to this project, please follow these steps:
 3. Commit your changes and push to your fork.
 4. Create a pull request to the main repository.
 
-## Class Diagram
+## Sequence Diagram
 
 ![Sequence_diagram](https://github.com/miladmosavei/Currency-Rate-Tracker/assets/142112088/314b0477-a2e3-4286-9132-a639a1c5bfba)
 
